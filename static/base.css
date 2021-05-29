@@ -1,0 +1,16 @@
+:root {
+  --blue: #120458;
+  --purp: #7a04eb;
+  --pink: #fe75fe;
+  --red: #ff00a0;
+  --rouge: #ff124f;
+}
+
+body {
+    background-color: var(--blue);
+}
+
+h1 {
+    font-family: 'Orbitron', sans-serif;
+    color: var(--pink);
+}

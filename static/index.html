@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Tron</title>
+<script type="text/javascript">
+
+const GRID_WIDTH = 200;
+const GRID_HEIGHT = 120;
+const TILE_SIZE = 5;
+
+window.onload = function () {
+    var conn;
+    
+    const UP_ARROW = 38;
+    const DOWN_ARROW = 40;
+    const LEFT_ARROW = 37;
+    const RIGHT_ARROW = 39;
+
+    var canvas = document.createElement('canvas');
+    ctx = canvas.getContext('2d');
+    container = document.getElementById('tron');
+    container.append(canvas);
+    canvas.width = GRID_WIDTH * TILE_SIZE;
+    canvas.height = GRID_HEIGHT * TILE_SIZE;
+
+    document.onkeydown = function(e) {
+        switch(e.keyCode) {
+            case UP_ARROW:
+                conn.send("UP");
+                break;
+            case DOWN_ARROW:
+                conn.send("DOWN");
+                break;
+            case LEFT_ARROW:
+                conn.send("LEFT");
+                break;
+            case RIGHT_ARROW:
+                conn.send("RIGHT");
+                break;
+        }
+    }
+
+    if (window["WebSocket"]) {
+        conn = new WebSocket("ws://" + document.location.host + "/game/ws/1423");
+        conn.onclose = function (evt) {
+            console.log("Connection closed...")
+        };
+        conn.onmessage = function (evt) {
+            var event = JSON.parse(evt.data);
+            switch(event.Kind) {
+                case "STATE_UPDATE":
+                    drawGrid(ctx, event.Data.grid);
+                    break;
+                case "BEGIN":
+                    resetGrid(ctx)
+
+            }
+        };
+    } else {
+        console.log("Browser does not support WebSockets...")
+    }
+};
+
+function drawGrid(ctx, board) {
+    colors = {
+        '9': '#FFFFFF', // WALL
+        // PLAYER COLORS
+        '0': '#FF124F',
+        '1': '#FE75FE',
+        '2': '#FF00A0',
+        '3': '#FF124F',
+        '4': '#FE75FE',
+        '5': '#FF124F',
+    }
+    for(i = 0; i < GRID_HEIGHT; i++) {
+        for(j = 0; j < GRID_WIDTH; j++) {
+            var index = i * GRID_WIDTH + j;
+            var item = board.charAt(index);
+            if(item == '8') { // EMPTY
+                continue;
+            }
+            ctx.fillStyle = colors[item];
+            ctx.fillRect(
+                TILE_SIZE * j,
+                TILE_SIZE * i,
+                TILE_SIZE,
+                TILE_SIZE
+            );
+        }
+    }
+}
+
+function resetGrid(ctx) {
+    const gridBackground = '#180770';
+    ctx.fillStyle = gridBackground;
+    ctx.clearRect(0, 0, GRID_WIDTH*TILE_SIZE, GRID_HEIGHT*TILE_SIZE);
+}
+
+</script>
+<style>
+    #tron {
+        width: 50%;
+        margin: 0 auto;
+    }
+</style>
+<link rel=stylesheet href="./base.css">
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron&display=swap" rel="stylesheet">
+</head>
+<body>
+<h1>Tronner</h1>
+<div id="tron"></div>
+</body>
+
+</html>

@@ -66,9 +66,9 @@ func (g *grid) serialize() string {
 
 func (g *grid) String() string {
 	sb := strings.Builder{}
-	for y := 0; y < int(g.height); y++ {
-		for x := 0; x < int(g.width); x++ {
-			sb.WriteString(fmt.Sprintf("%d", g.data[y][x]))
+	for x := 0; x < int(g.width); x++ {
+		for y := 0; y < int(g.height); y++ {
+			sb.WriteString(fmt.Sprintf("%d", g.get(x, y)))
 		}
 		sb.WriteString("\n")
 	}

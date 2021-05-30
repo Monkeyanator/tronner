@@ -104,6 +104,8 @@ func (g *Game) handleEvent(p *Player, e event) {
 		if p.direction != LEFT {
 			p.direction = RIGHT
 		}
+	case EventBoost:
+		p.boostTicks = timeToTicks(time.Second * 2)
 	default:
 		log.Printf("Cannot handle unknown event %s", e)
 	}
@@ -114,6 +116,7 @@ func (g *Game) initialize() {
 	g.arrangePlayers()
 	for _, p := range g.players {
 		p.alive = true
+		p.boostTicks = 0
 	}
 	g.finished = false
 	g.broadcast <- event{
@@ -150,39 +153,52 @@ func (g *Game) tick() []event {
 		if !p.alive {
 			continue
 		}
-		var newX, newY int
+		var (
+			// unit direction change for x, y
+			dx, dy = 0, 0
+			// number of units to move in that direction this tick
+			xd = 1
+		)
+		if p.boostTicks > 0 {
+			xd += 1
+			p.boostTicks--
+		}
 		switch p.direction {
 		case UP:
-			newX = p.x
-			newY = p.y - 1
+			dy = -1
 		case DOWN:
-			newX = p.x
-			newY = p.y + 1
+			dy = 1
 		case LEFT:
-			newX = p.x - 1
-			newY = p.y
+			dx = -1
 		case RIGHT:
-			newX = p.x + 1
-			newY = p.y
+			dx = 1
 		}
-		dest := g.grid.get(newX, newY)
-		if dest != EMPTY {
-			g.grid.blast(newX, newY, 2)
-			p.alive = false
-			events = append(events, event{
-				Kind: EventDeath,
-				Data: map[string]interface{}{
-					"gid": p.gid,
-				},
-			})
-			continue
+		var newX, newY int
+		for d := 1; d <= xd; d++ {
+			newX = p.x + dx*d
+			newY = p.y + dy*d
+			dest := g.grid.get(newX, newY)
+			if dest != EMPTY {
+				g.grid.blast(newX, newY, 2)
+				p.alive = false
+				events = append(events, event{
+					Kind: EventDeath,
+					Data: map[string]interface{}{
+						"gid": p.gid,
+					},
+				})
+				break
+			}
+			g.grid.set(newX, newY, uint8(p.gid))
 		}
-		remaining++
-		p.x = newX
-		p.y = newY
-		g.grid.set(p.x, p.y, uint8(p.gid))
+		if p.alive {
+			remaining++
+			p.x = newX
+			p.y = newY
+		}
 	}
 
+	// Once working change to 1
 	if remaining == 0 {
 		g.finished = true
 	}
@@ -232,4 +248,8 @@ func (g *Game) nextGID() gid {
 		}
 		i++
 	}
+}
+
+func timeToTicks(t time.Duration) uint {
+	return uint(t / tickInterval)
 }

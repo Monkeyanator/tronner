@@ -13,9 +13,10 @@ type Player struct {
 	gid gid
 
 	// game related state
-	direction direction
-	x, y      int
-	alive     bool
+	direction  direction
+	x, y       int
+	boostTicks uint // number of ticks remaining on boost
+	alive      bool
 
 	conn Connection
 }

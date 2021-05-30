@@ -17,6 +17,7 @@ window.onload = function () {
     const DOWN_ARROW = 40;
     const LEFT_ARROW = 37;
     const RIGHT_ARROW = 39;
+    const SPACE = 32;
 
     var canvas = document.createElement('canvas');
     ctx = canvas.getContext('2d');
@@ -38,6 +39,9 @@ window.onload = function () {
                 break;
             case RIGHT_ARROW:
                 conn.send("RIGHT");
+                break;
+            case SPACE:
+                conn.send("BOOST");
                 break;
         }
     }

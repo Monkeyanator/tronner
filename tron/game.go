@@ -14,7 +14,7 @@ const (
 	tickInterval = 20 * time.Millisecond
 )
 
-// event to be sent over the wire
+// gid is a unqiue ID assigned to a player per-game.
 type gid uint8
 
 // game represents a running instance of a Tron game.
@@ -42,7 +42,6 @@ func NewGame() *Game {
 	}
 
 	go g.broadcastLoop()
-	go g.run()
 	return g
 }
 
@@ -122,7 +121,7 @@ func (g *Game) initialize() {
 	}
 }
 
-func (g *Game) run() {
+func (g *Game) Run() {
 	g.initialize()
 	ticker := time.NewTicker(tickInterval)
 	for {

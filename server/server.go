@@ -69,8 +69,9 @@ func (s *Server) gameHandler(w http.ResponseWriter, r *http.Request) {
 	// should be separate path or method on this path
 	if !ok {
 		s.mu.Lock()
-		game = tron.NewGame()
 		log.Printf("Creating game ID %s", id)
+		game = tron.NewGame()
+		go game.Run()
 		s.games[id] = game
 		s.mu.Unlock()
 	}

@@ -8,6 +8,8 @@ const GRID_WIDTH = 200;
 const GRID_HEIGHT = 120;
 const TILE_SIZE = 5;
 
+var prevBoard = new Array(GRID_WIDTH*GRID_HEIGHT+1).join('~');
+
 window.onload = function () {
     var conn;
     
@@ -50,9 +52,11 @@ window.onload = function () {
             switch(event.Kind) {
                 case "STATE_UPDATE":
                     drawGrid(ctx, event.Data.grid);
+                    prevBoard = event.Data.grid;
                     break;
                 case "BEGIN":
                     resetGrid(ctx)
+                    break;
 
             }
         };
@@ -64,6 +68,7 @@ window.onload = function () {
 function drawGrid(ctx, board) {
     colors = {
         '9': '#FFFFFF', // WALL
+        '8': '#120458', // EMPTY
         // PLAYER COLORS
         '0': '#FF124F',
         '1': '#FE75FE',
@@ -75,9 +80,11 @@ function drawGrid(ctx, board) {
     for(i = 0; i < GRID_HEIGHT; i++) {
         for(j = 0; j < GRID_WIDTH; j++) {
             var index = i * GRID_WIDTH + j;
+            var prevItem = prevBoard.charAt(index);
             var item = board.charAt(index);
-            if(item == '8') { // EMPTY
-                continue;
+            // bug where WALLS don't get drawn... I'd blame JS but I think it's on me :)
+            if(item === prevItem && item != '9') {
+                continue
             }
             ctx.fillStyle = colors[item];
             ctx.fillRect(

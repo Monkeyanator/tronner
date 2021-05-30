@@ -167,6 +167,7 @@ func (g *Game) tick() []event {
 		}
 		dest := g.grid.get(newX, newY)
 		if dest != EMPTY {
+			g.grid.blast(newX, newY, 2)
 			p.alive = false
 			events = append(events, event{
 				Kind: EventDeath,

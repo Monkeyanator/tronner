@@ -33,7 +33,9 @@ func (g *grid) get(x, y int) uint8 {
 }
 
 func (g *grid) set(x, y int, val uint8) {
-	g.data[y][x] = val
+	if uint(x) < g.width && uint(y) < g.height {
+		g.data[y][x] = val
+	}
 }
 
 func (g *grid) initialize() {
@@ -49,6 +51,16 @@ func (g *grid) initialize() {
 	for i := 0; i < int(g.width); i++ {
 		g.data[0][i] = WALL
 		g.data[g.height-1][i] = WALL
+	}
+}
+
+func (g *grid) blast(x, y, rad int) {
+	for xd := -rad; xd <= rad; xd++ {
+		for yd := -rad; yd <= rad; yd++ {
+			if g.get(x, y) != WALL {
+				g.set(x+xd, y+yd, EMPTY)
+			}
+		}
 	}
 }
 

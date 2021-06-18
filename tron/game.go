@@ -234,7 +234,11 @@ func (g *Game) arrangePlayers() {
 			p.direction = LEFT
 			x = gridWidth - offset
 		}
-		y = (gridHeight / 4) * (int(gid)/2 + 1)
+		if len(g.players) <= 2 {
+			y = gridHeight / 2 * (int(gid)/2 + 1)
+		} else {
+			y = (gridHeight/len(g.players) + 1/2) * (int(gid)/2 + 1)
+		}
 		p.x = x
 		p.y = y
 	}

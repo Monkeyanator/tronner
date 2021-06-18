@@ -14,5 +14,6 @@ build:
 serve:
 	$(GO) run ./cmd
 
+.PHONY: test
 test:
 	$(GO) test ./...

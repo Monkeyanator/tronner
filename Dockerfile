@@ -1,13 +1,14 @@
 FROM golang:1.15.6 AS builder
 WORKDIR /app
 COPY . .
-RUN make build
+RUN make server.build
+RUN make wasm.build
 
 FROM alpine:latest
 RUN apk --no-cache add ca-certificates
 WORKDIR /root/
 COPY . /app/
-COPY --from=builder /app/main /app/
+COPY --from=builder /app/server /app/
 EXPOSE 8080
 WORKDIR /app/
-CMD ["./main", "--port", "8080"]
+CMD ["./server", "--port", "8080"]

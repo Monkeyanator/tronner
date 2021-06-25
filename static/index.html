@@ -2,14 +2,7 @@
 <html lang="en">
 <head>
 <title>Tron</title>
-<script src="./wasm_exec.js"></script>
 <script type="text/javascript">
-
-const go = new Go();
-WebAssembly.instantiateStreaming(fetch("client.wasm"), go.importObject)
-    .then((result) => {
-        go.run(result.instance);
-    });
 
 const GRID_WIDTH = 200;
 const GRID_HEIGHT = 120;

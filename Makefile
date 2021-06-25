@@ -6,18 +6,13 @@ TAG=latest
 docker.build:
 	docker build -t $(IMAGE):$(TAG) .
 
-.PHONY: server.build
-server.build:
-	CGO_ENABLED=0 GOOS=linux $(GO) build -a -o server ./cmd/server
-
-.PHONY: wasm.build
-wasm.build:
-	CGO_ENABLED=0 GOOS=js GOARCH=wasm $(GO) build -a -o client.wasm ./cmd/client
-	mv ./client.wasm ./static
+.PHONY: build
+build:
+	CGO_ENABLED=0 GOOS=linux $(GO) build -a -o main ./cmd
 
 .PHONY: serve
 serve:
-	$(GO) run ./cmd/server/main.go
+	$(GO) run ./cmd
 
 .PHONY: test
 test:

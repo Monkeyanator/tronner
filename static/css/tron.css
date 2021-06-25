@@ -1,0 +1,33 @@
+:root {
+  --blue: #120458;
+  --purp: #7a04eb;
+  --pink: #fe75fe;
+  --red: #ff00a0;
+  --rouge: #ff124f;
+}
+
+body {
+  background-color: black;
+  margin: 0;
+}
+
+h1 {
+  font-family: 'Orbitron', sans-serif;
+  color: var(--pink);
+}
+
+#tron {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+#banner {
+  position: absolute;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 10vw;
+  font-style: italic;
+  color: var(--pink);
+  z-index: 1; /* appear over canvas */
+}

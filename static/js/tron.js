@@ -53,7 +53,6 @@ window.onload = function () {
                     prevBoard = event.Data.grid;
                     break;
                 case "BEGIN":
-                    resetGrid(ctx)
                     break;
 
             }
@@ -93,10 +92,4 @@ function drawGrid(ctx, board) {
             );
         }
     }
-}
-
-function resetGrid(ctx) {
-    const gridBackground = '#180770';
-    ctx.fillStyle = gridBackground;
-    ctx.clearRect(0, 0, GRID_WIDTH*TILE_SIZE, GRID_HEIGHT*TILE_SIZE);
 }

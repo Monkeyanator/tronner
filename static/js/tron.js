@@ -13,7 +13,7 @@ window.onload = function () {
     const RIGHT_ARROW = 39;
     const SPACE = 32;
 
-    var canvas = document.createElement('canvas');
+    canvas = document.createElement('canvas');
     ctx = canvas.getContext('2d');
     container = document.getElementById('tron');
     container.append(canvas);
@@ -41,7 +41,10 @@ window.onload = function () {
     }
 
     if (window["WebSocket"]) {
-        conn = new WebSocket("ws://" + document.location.host + "/game/ws/1423");
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+        const gameID = urlParams.get('gameID');
+        conn = new WebSocket(`ws://${document.location.host}/game/ws/${gameID}`);
         conn.onclose = function (evt) {
             console.log("Connection closed...")
         };
